@@ -1,0 +1,33 @@
+.board {
+    border: solid 4px black;
+  aspect-ratio: 1;
+  background-color: white;
+  display:grid;
+  grid-template-columns: repeat(5, 1fr);
+}
+
+input {
+  text-align: center;
+  width:100px; 
+  font-size: xxx-large;
+}
+
+input:focus {
+  z-index: 100;
+  border: #646cff 4px solid;
+  outline: none;
+}
+
+.cell {
+  font-family: 'Courier New', Courier, monospace;
+  font-weight: 700;
+  border: 4px solid black;
+  background-color: white;
+  color: black;
+  display:grid;
+  place-items: center;
+}
+
+.empty {
+    background-color: black;
+}

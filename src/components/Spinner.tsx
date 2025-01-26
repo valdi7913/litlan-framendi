@@ -1,6 +1,7 @@
+import './Spinner.css';
+
 export default function Spinner() {
     return (
-
         <div className="lds-grid">
             {
                 Array.from({length:9}, (index)=> index)

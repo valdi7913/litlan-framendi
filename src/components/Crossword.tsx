@@ -1,3 +1,4 @@
+import "./Crossword.css";
 import { useEffect, useState } from "react"; 
 import Spinner from "./Spinner";
 export default function Crossword() {
@@ -33,8 +34,11 @@ export default function Crossword() {
     }, []);
 
     const handleInputChange = (index: number, value: string) => {
+        const sanitizedValue = value.replace(/[^a-zA-ZÁÉÍÓÚÝÞÆÖáéíóúýþæö]/g, "").toUpperCase();
+
         let newBoard: string[] = [...board];
-        newBoard[index] = value;
+        newBoard[index] = sanitizedValue;
+        console.log(newBoard);
         setBoard(newBoard);
     };
 
@@ -48,11 +52,13 @@ export default function Crossword() {
         <div className="board">
             {
             board.map((value, index) => {
+                if(value === " ") return <div className="empty"></div> 
                 return (
                 <input 
                     key={index} 
                     value={value}
                     className="cell" 
+                    onKeyDown={(e)=>"return /[a-z]/i.test(event.key)"}
                     onChange={(e)=> handleInputChange(index, e.target.value[0] || '')}
                     maxLength={1}>
                 </input> 
