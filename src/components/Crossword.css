@@ -1,33 +1,101 @@
+:root {
+    --cell-border-color: #b4b4b4;
+}
+
+.gameContainer {
+    display:flex;
+    flex-direction: row;
+    gap: 16px
+}
+
+.hintContainer {
+    display: flex;
+    flex-direction: column;
+    height:100%;
+    background-color: white;
+    color: black;
+    border: solid black 2px;
+    align-items: start;
+    padding: 16px;
+}
+
+.hintlist {
+    display: flex;
+    flex-direction: column;
+}
+
+.hint {
+    display: flex;
+    text-align: left;
+}
+
 .board {
-    border: solid 4px black;
-  aspect-ratio: 1;
-  background-color: white;
-  display:grid;
-  grid-template-columns: repeat(5, 1fr);
+    width: 400px;
+    height: 400px;
+    border: solid 2px var(--cell-border-color);
+    aspect-ratio: 1;
+    background-color: white;
+    display:grid;
+    grid-template-columns: repeat(5, 80px);
+    grid-template-rows: repeat(5, 80px);
 }
 
 input {
-  text-align: center;
-  width:100px; 
-  font-size: xxx-large;
+    width: 100%;
+    text-align: center;
+    background-color: white;
+    color:  black;
+    outline: none;
+    border: none;
+    font-size:xx-large;
+    font-weight: 500;
+    font-family: Roboto;
 }
 
-input:focus {
-  z-index: 100;
-  border: #646cff 4px solid;
-  outline: none;
+.number {
+    font-family: Roboto;
+    color: black;
+    margin: 4px 8px;
+    position: absolute;
 }
 
 .cell {
-  font-family: 'Courier New', Courier, monospace;
-  font-weight: 700;
-  border: 4px solid black;
-  background-color: white;
-  color: black;
-  display:grid;
-  place-items: center;
+    display: flex;
+    aspect-ratio: 1;
+    border: 2px solid var(--cell-border-color);
+}
+
+input:focus{
+  background-color: #646cff55;
+   -moz-user-select: -moz-none;
+   -khtml-user-select: none;
+   -webkit-user-select: none;
+
+   /*
+     Introduced in IE 10.
+     See http://ie.microsoft.com/testdrive/HTML5/msUserSelect/
+   */
+   -ms-user-select: none;
+   user-select: none;
+}
+
+.cell:focus-within {
+  z-index: 100;
+  border: #646cff 4px solid;
+  outline: none;
+   -moz-user-select: -moz-none;
+   -khtml-user-select: none;
+   -webkit-user-select: none;
+
+   /*
+     Introduced in IE 10.
+     See http://ie.microsoft.com/testdrive/HTML5/msUserSelect/
+   */
+   -ms-user-select: none;
+   user-select: none;
 }
 
 .empty {
     background-color: black;
+    border: 2px solid var(--cell-border-color)
 }
