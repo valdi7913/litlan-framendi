@@ -1,6 +1,6 @@
 import "./Crossword.css";
 import { useEffect, useState } from "react";
-import Spinner from "./Spinner";
+import Spinner from "../Spinner/Spinner";
 
 type Cell = {
     letter: string;

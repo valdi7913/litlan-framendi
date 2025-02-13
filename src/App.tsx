@@ -1,10 +1,11 @@
 import './App.css'
-import Crossword from './components/Crossword';
+import Crossword from './components/Crossword/Crossword';
+import Header from './components/Header/Header';
 
 function App() {
   return (
     <>
-      <h1> Litlan </h1>
+      <Header></Header>
       <Crossword></Crossword>
     </>
   )

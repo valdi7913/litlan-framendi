@@ -3,18 +3,32 @@
   line-height: 1.5;
   font-weight: 400;
 
-  color-scheme: light dark;
-  background-color: #adffd2;
+  --background-color: #fafafa;
+  --foreground-color: #030301;
+  --primary-color: #628395;
+  --positive-color: #A6DDAA;
+  --ambivalient-color: #DBAD6A;
+  --negative-color: #EF809E;
 }
 
 * {margin: 0; padding: 0; color:black;}
 
+#root, html, body, section{
+  height: 100vh;
+}
+
+html {
+  background-color: var(--background-color);
+}
+
 body {
   display: flex;
   place-items: center;
-  min-height: 100vh;
+  margin: 0 auto;
+  max-width: 800px;
 }
 
-h1 {
-  font-size: 4em;
+section {
+  display: flex;
+  align-items: center;
 }
