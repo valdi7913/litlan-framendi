@@ -35,7 +35,7 @@ export default function Crossword() {
     const [highlightDirection, setHighlightDirection] = useState<'row' | 'col'>('row');
     const inputRefs = useRef<(HTMLInputElement | null)[]>([]);
     const [deadWasLastPressed, setDeadWasLastPressed] = useState<boolean>(false);
-    
+
     useEffect(() => {
         const fetchData = async () => {
             try {
@@ -57,31 +57,31 @@ export default function Crossword() {
                 };
 
                 const board: Cell[] = [
-                    { letter: " ", hintNumber: null, isBlack: true},
-                    { letter: " ", hintNumber: null, isBlack: true},
-                    { letter: "N", hintNumber: 1,    isBlack: false},
-                    { letter: "A", hintNumber: 6,    isBlack: false},
-                    { letter: "V", hintNumber: 7,    isBlack: false},
-                    { letter: " ", hintNumber: null, isBlack: true},
-                    { letter: "N", hintNumber: 2,    isBlack: false},
-                    { letter: "A", hintNumber: null, isBlack: false},
-                    { letter: "M", hintNumber: null, isBlack: false},
-                    { letter: "M", hintNumber: null, isBlack: false},
-                    { letter: "S", hintNumber: 3,    isBlack: false},
-                    { letter: "A", hintNumber: null, isBlack: false},
-                    { letter: "U", hintNumber: null, isBlack: false},
-                    { letter: "M", hintNumber: null, isBlack: false},
-                    { letter: "A", hintNumber: null, isBlack: false},
-                    { letter: "P", hintNumber: 4,    isBlack: false},
-                    { letter: "U", hintNumber: null, isBlack: false},
-                    { letter: "M", hintNumber: null, isBlack: false},
-                    { letter: "A", hintNumber: null, isBlack: false},
-                    { letter: " ", hintNumber: null, isBlack: true},
-                    { letter: "Á", hintNumber: 5,    isBlack: false},
-                    { letter: "T", hintNumber: null, isBlack: false},
-                    { letter: "T", hintNumber: null, isBlack: false},
-                    { letter: " ", hintNumber: null, isBlack: true},
-                    { letter: " ", hintNumber: null, isBlack: true}
+                    { letter: " ", hintNumber: null, isBlack: false },
+                    { letter: " ", hintNumber: null, isBlack: false },
+                    { letter: " ", hintNumber: null, isBlack: false },
+                    { letter: " ", hintNumber: null, isBlack: false },
+                    { letter: " ", hintNumber: null, isBlack: false },
+                    { letter: " ", hintNumber: null, isBlack: false },
+                    { letter: " ", hintNumber: null, isBlack: false },
+                    { letter: " ", hintNumber: null, isBlack: false },
+                    { letter: " ", hintNumber: null, isBlack: false },
+                    { letter: " ", hintNumber: null, isBlack: false },
+                    { letter: " ", hintNumber: null, isBlack: false },
+                    { letter: " ", hintNumber: null, isBlack: false },
+                    { letter: " ", hintNumber: null, isBlack: false },
+                    { letter: " ", hintNumber: null, isBlack: false },
+                    { letter: " ", hintNumber: null, isBlack: false },
+                    { letter: " ", hintNumber: null, isBlack: false },
+                    { letter: " ", hintNumber: null, isBlack: false },
+                    { letter: " ", hintNumber: null, isBlack: false },
+                    { letter: " ", hintNumber: null, isBlack: false },
+                    { letter: " ", hintNumber: null, isBlack: false },
+                    { letter: " ", hintNumber: null, isBlack: false },
+                    { letter: " ", hintNumber: null, isBlack: false },
+                    { letter: " ", hintNumber: null, isBlack: false },
+                    { letter: " ", hintNumber: null, isBlack: false },
+                    { letter: " ", hintNumber: null, isBlack: false }
                 ];
 
                 setHorizontalHints(hints.horizontal);
@@ -97,20 +97,20 @@ export default function Crossword() {
         fetchData();
     }, []);
 
-    useEffect(()=> {
+    useEffect(() => {
         const cellIsNotNull = selectedCell !== null;
         const cellIsNotBlack = selectedCell ? !board[selectedCell].isBlack : false;
-        if(cellIsNotNull && cellIsNotBlack) {
+        if (cellIsNotNull && cellIsNotBlack) {
             inputRefs.current[selectedCell]?.focus();
         }
-    },[selectedCell, board])
+    }, [selectedCell, board])
 
     const getRowCol = (index: number): RowCol => ({
         row: Math.floor(index / 5),
         col: index % 5
     });
 
-    const getIndex = (row: number, col: number) : number => row * 5 + col;
+    const getIndex = (row: number, col: number): number => row * 5 + col;
 
     function wrap(value: number, min: number, max: number): number {
         return ((value - min) % (max - min) + (max - min)) % (max - min) + min;
@@ -118,7 +118,7 @@ export default function Crossword() {
 
 
     const handleClick = (index: number) => {
-        if(index === selectedCell) {
+        if (index === selectedCell) {
             const nextHighlightDirection = highlightDirection === "row" ? 'col' : 'row';
             setHighlightDirection(nextHighlightDirection);
         } else {
@@ -126,36 +126,74 @@ export default function Crossword() {
         }
     };
 
-    const findNextInRow = (currentPos: RowCol, forward: boolean) : number => {
+    const findNextInRow = (currentPos: RowCol, forward: boolean): number => {
         let col = currentPos.col;
         const row = currentPos.row;
 
-        for(let i = 0; i < 5; i++) {
-            col = forward 
+        for (let i = 0; i < 5; i++) {
+            col = forward
                 ? wrap(col + 1, 0, 5)
                 : wrap(col - 1, 0, 5)
 
-            const index = getIndex(row,col);
-            if(!board[index].isBlack) {
+            const index = getIndex(row, col);
+            if (!board[index].isBlack) {
                 return index;
             }
         }
         return 0;
     }
 
-    const findNextInCol = (currentPos: RowCol, forward: boolean) : number => {
+    const findNextInCol = (currentPos: RowCol, forward: boolean): number => {
         let row = currentPos.row;
         const col = currentPos.col;
 
-        for(let i = 0; i < 5; i++) {
+        for (let i = 0; i < 5; i++) {
             row = forward
-                ? wrap(row + 1, 0 ,5)
-                : wrap(row - 1, 0 ,5);
+                ? wrap(row + 1, 0, 5)
+                : wrap(row - 1, 0, 5);
             const index = getIndex(row, col)
-            if(!board[index].isBlack) {
+            if (!board[index].isBlack) {
                 return index
             }
         }
+        return 0;
+    }
+
+    const findNextInRowTab = (currentPos: RowCol, forward: boolean): number => {
+        let row = currentPos.row;
+
+        for (let i = 0; i < 5; i++) {
+            row = forward
+                ? wrap(row + 1, 0, 5)
+                : wrap(row - 1, 0, 5);
+            for (let col = 0; col < 5; col++) {
+                const index = getIndex(row, col);
+                console.log("Checking index ", index)
+                if (!board[index].isBlack) {
+                    return index
+                }
+            }
+        }
+
+        return 0;
+    }
+
+    const findNextInColTab = (currentPos: RowCol, forward: boolean): number => {
+        let col = currentPos.col;
+
+        for (let i = 0; i < 5; i++) {
+            col = forward
+                ? wrap(col + 1, 0, 5)
+                : wrap(col - 1, 0, 5);
+            for (let row = 0; row < 5; row++) {
+                const index = getIndex(row, col);
+                console.log("Checking index ", index)
+                if (!board[index].isBlack) {
+                    return index
+                }
+            }
+        }
+
         return 0;
     }
 
@@ -163,70 +201,70 @@ export default function Crossword() {
         //Todo breyta í switch statement, cant be bothered
         const currentPos = getRowCol(index);
         console.log(e.key, e.key === "ArrowUp")
-        if(
-            e.key === "Escape" || 
-            e.key === "Control" || 
-            e.key === "Shift" || 
-            e.key === "Enter" || 
+        if (
+            e.key === "Escape" ||
+            e.key === "Control" ||
+            e.key === "Shift" ||
+            e.key === "Enter" ||
             e.key === "Alt" ||
             e.key === "Meta" ||
             e.key === "Alt"
         ) return;
 
-        if(e.key === "Dead"){
+        if (e.key === "Dead") {
             setDeadWasLastPressed(true);
             return;
         }
 
-        if(e.key === "ArrowUp")    {
+        if (e.key === "ArrowUp") {
             const upIndex = findNextInCol(currentPos, false);
             setSelectedCell(upIndex);
             return;
         }
-        if(e.key === "ArrowDown")    {
+        if (e.key === "ArrowDown") {
             const downIndex = findNextInCol(currentPos, true)
             setSelectedCell(downIndex);
             return;
         }
-        if(e.key === "ArrowLeft")    {
+        if (e.key === "ArrowLeft") {
             const leftIndex = findNextInRow(currentPos, false)
             setSelectedCell(leftIndex);
             return;
         }
-        if(e.key === "ArrowRight") {
+        if (e.key === "ArrowRight") {
             const rightIndex = findNextInRow(currentPos, true);
             setSelectedCell(rightIndex);
             return
         }
 
-        if(e.key ===  "Tab") {
+        if (e.key === "Tab") {
             e.preventDefault();
 
             let nextIndex: number | null = null;
 
-            if(highlightDirection === 'row') {
-                nextIndex = findNextInCol(currentPos, !e.shiftKey);
+            if (highlightDirection === 'row') {
+                nextIndex = findNextInRowTab(currentPos, !e.shiftKey);
             } else {
-                nextIndex = findNextInRow(currentPos, !e.shiftKey);
+                nextIndex = findNextInColTab(currentPos, !e.shiftKey);
             }
 
             setSelectedCell(nextIndex);
             inputRefs.current[nextIndex]?.focus();
             return;
         }
-        else if(e.key === " ") {
+        else if (e.key === " ") {
             e.preventDefault();
 
             const nextHighlightDirection = highlightDirection === 'row' ? 'col' : 'row';
             setHighlightDirection(nextHighlightDirection);
             return
         }
-        else if(e.key === "Backspace") {
+        else if (e.key === "Backspace") {
             const newBoard = [...board];
             newBoard[index].letter = "";
             setBoard(newBoard);
             const currentPos = getRowCol(index);
-            const nextTile = highlightDirection==='row' 
+            const nextTile = highlightDirection === 'row'
                 ? findNextInRow(currentPos, false)
                 : findNextInCol(currentPos, false);
             console.log("Next pos is ", nextTile);
@@ -236,45 +274,45 @@ export default function Crossword() {
             const newBoard = [...board];
             let pressedKey: string = e.key.toLocaleUpperCase();
 
-            if(deadWasLastPressed) {
+            if (deadWasLastPressed) {
                 setDeadWasLastPressed(false);
-                pressedKey = deadVersion[pressedKey] ?? pressedKey; 
+                pressedKey = deadVersion[pressedKey] ?? pressedKey;
             }
 
 
             newBoard[index].letter = pressedKey;
             setBoard(newBoard);
-            const nextTile = highlightDirection==='row' 
+            const nextTile = highlightDirection === 'row'
                 ? findNextInRow(currentPos, true)
                 : findNextInCol(currentPos, true);
             console.log("Next pos is ", nextTile);
             setSelectedCell(nextTile);
 
-        }        
+        }
     };
 
     const deadVersion: Record<string, string> = {
-        A:'Á',
-        E:'É',
-        I:'Í',
-        O:'Ó',
-        U:'Ú',
-        Y:'Ý'
+        A: 'Á',
+        E: 'É',
+        I: 'Í',
+        O: 'Ó',
+        U: 'Ú',
+        Y: 'Ý'
     }
 
-    
+
 
     const shouldHighlight = (index: number): boolean => {
-        if(selectedCell === null) return false;
+        if (selectedCell === null) return false;
 
         const selectedPos: RowCol = getRowCol(selectedCell);
         const currentPos: RowCol = getRowCol(index);
 
-        if(highlightDirection === 'row') {
+        if (highlightDirection === 'row') {
             return selectedPos.row === currentPos.row;
         } else {
             return selectedPos.col === currentPos.col;
-        } 
+        }
     }
 
     if (error) {
@@ -293,9 +331,9 @@ export default function Crossword() {
                 <div className="board">
                     {
                         board.map((cell: Cell, index: number) => {
-                            if (cell.isBlack) {return <div key={index} className="empty"></div>}
+                            if (cell.isBlack) { return <div key={index} className="empty"></div> }
                             return (
-                                <div 
+                                <div
                                     className={`cell`}
                                     key={index}>
                                     <div className="number">{cell.hintNumber}</div>
