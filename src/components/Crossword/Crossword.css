@@ -11,14 +11,9 @@
 .hintContainer {
     display: flex;
     flex-direction: column;
-    height:100%;
-    width:400px;
-    aspect-ratio:1;
-    background-color: white;
     color: black;
-    border: solid black 2px;
     align-items: start;
-    padding: 16px;
+    max-height: 400px;
 }
 
 .hintlist {
@@ -28,7 +23,27 @@
 
 .hint {
     display: flex;
+    align-items: center;
+    justify-content: start;
     text-align: left;
+    font-size: auto;
+}
+
+#root {padding: 0;}
+@media(max-width:400px) {
+    .gameContainer {
+        flex-direction: column;
+        width: 100%;
+    }
+
+    .hintContainer {
+        visibility: hidden;
+        display: none;
+    }
+
+    .board {
+        width: 100%;
+    }
 }
 
 .board {
@@ -42,6 +57,8 @@
     grid-template-rows: repeat(5, 80px);
 }
 
+
+
 input {
     width: 100%;
     text-align: center;
@@ -51,7 +68,21 @@ input {
     border: none;
     font-size:xx-large;
     font-weight: 500;
-    font-family: Roboto;
+    font-family: Roboto, sans-serif;
+    caret-color: transparent;
+}
+
+.unselectable {
+   -moz-user-select: -moz-none;
+   -khtml-user-select: none;
+   -webkit-user-select: none;
+
+   /*
+     Introduced in IE 10.
+     See http://ie.microsoft.com/testdrive/HTML5/msUserSelect/
+   */
+   -ms-user-select: none;
+   user-select: none;
 }
 
 .number {
@@ -88,13 +119,12 @@ input:focus{
    -moz-user-select: -moz-none;
    -khtml-user-select: none;
    -webkit-user-select: none;
-
-   /*
-     Introduced in IE 10.
-     See http://ie.microsoft.com/testdrive/HTML5/msUserSelect/
-   */
    -ms-user-select: none;
    user-select: none;
+}
+
+.highlight {
+    background-color: #646cff55;
 }
 
 .empty {

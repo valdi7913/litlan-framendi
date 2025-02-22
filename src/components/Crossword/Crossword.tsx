@@ -1,15 +1,21 @@
-import "./Crossword.css";
-import { useEffect, useState } from "react";
 import Spinner from "../Spinner/Spinner";
+import "./Crossword.css";
+import { useEffect, useRef, useState } from "react";
 
 type Cell = {
     letter: string;
     hintNumber: number | null;
+    isBlack: boolean;
 };
 
 type Hint = {
     number: number
     text: string,
+}
+
+type RowCol = {
+    row: number,
+    col: number
 }
 
 type HintApiResponse = {
@@ -19,11 +25,16 @@ type HintApiResponse = {
 
 export default function Crossword() {
     const [loading, setLoading] = useState(true);
-    const [error, setError] = useState(null);
+    const [error, setError] = useState<string>("");
     const [horizontalHints, setHorizontalHints] = useState<Hint[]>([]);
     const [verticalHints, setVerticalHints] = useState<Hint[]>([]);
     const [board, setBoard] = useState<Cell[]>([]);
 
+    //Highlight and Keyboard handling
+    const [selectedCell, setSelectedCell] = useState<number | null>(null);
+    const [highlightDirection, setHighlightDirection] = useState<'row' | 'col'>('row');
+    const inputRefs = useRef<(HTMLInputElement | null)[]>([]);
+    
     useEffect(() => {
         const fetchData = async () => {
             try {
@@ -45,38 +56,38 @@ export default function Crossword() {
                 };
 
                 const board: Cell[] = [
-                    { letter: " ", hintNumber: null },
-                    { letter: " ", hintNumber: null },
-                    { letter: "N", hintNumber: 1 },
-                    { letter: "A", hintNumber: 6 },
-                    { letter: "V", hintNumber: 7 },
-                    { letter: " ", hintNumber: null },
-                    { letter: "N", hintNumber: 2 },
-                    { letter: "A", hintNumber: null },
-                    { letter: "M", hintNumber: null },
-                    { letter: "M", hintNumber: null },
-                    { letter: "S", hintNumber: 3 },
-                    { letter: "A", hintNumber: null },
-                    { letter: "U", hintNumber: null },
-                    { letter: "M", hintNumber: null },
-                    { letter: "A", hintNumber: null },
-                    { letter: "P", hintNumber: 4 },
-                    { letter: "U", hintNumber: null },
-                    { letter: "M", hintNumber: null },
-                    { letter: "A", hintNumber: null },
-                    { letter: " ", hintNumber: null },
-                    { letter: "Á", hintNumber: 5 },
-                    { letter: "T", hintNumber: null },
-                    { letter: "T", hintNumber: null },
-                    { letter: " ", hintNumber: null },
-                    { letter: " ", hintNumber: null }
+                    { letter: " ", hintNumber: null, isBlack: true},
+                    { letter: " ", hintNumber: null, isBlack: true},
+                    { letter: "N", hintNumber: 1,    isBlack: false},
+                    { letter: "A", hintNumber: 6,    isBlack: false},
+                    { letter: "V", hintNumber: 7,    isBlack: false},
+                    { letter: " ", hintNumber: null, isBlack: true},
+                    { letter: "N", hintNumber: 2,    isBlack: false},
+                    { letter: "A", hintNumber: null, isBlack: false},
+                    { letter: "M", hintNumber: null, isBlack: false},
+                    { letter: "M", hintNumber: null, isBlack: false},
+                    { letter: "S", hintNumber: 3,    isBlack: false},
+                    { letter: "A", hintNumber: null, isBlack: false},
+                    { letter: "U", hintNumber: null, isBlack: false},
+                    { letter: "M", hintNumber: null, isBlack: false},
+                    { letter: "A", hintNumber: null, isBlack: false},
+                    { letter: "P", hintNumber: 4,    isBlack: false},
+                    { letter: "U", hintNumber: null, isBlack: false},
+                    { letter: "M", hintNumber: null, isBlack: false},
+                    { letter: "A", hintNumber: null, isBlack: false},
+                    { letter: " ", hintNumber: null, isBlack: true},
+                    { letter: "Á", hintNumber: 5,    isBlack: false},
+                    { letter: "T", hintNumber: null, isBlack: false},
+                    { letter: "T", hintNumber: null, isBlack: false},
+                    { letter: " ", hintNumber: null, isBlack: true},
+                    { letter: " ", hintNumber: null, isBlack: true}
                 ];
 
                 setHorizontalHints(hints.horizontal);
                 setVerticalHints(hints.vertical);
                 setBoard(board);
-            } catch (error: any) {
-                setError(error.message);
+            } catch (error) {
+                setError((error as Error).message);
             } finally {
                 setLoading(false);
             }
@@ -85,17 +96,163 @@ export default function Crossword() {
         fetchData();
     }, []);
 
-    const handleInputChange = (index: number, value: string) => {
-        const sanitizedValue = value.replace(/[^a-zA-ZÁÉÍÓÚÝÞÐÆÖáéíóúýþæöð]/g, "").toUpperCase();
+    useEffect(()=> {
+        const cellIsNotNull = selectedCell !== null;
+        const cellIsNotBlack = selectedCell ? !board[selectedCell].isBlack : false;
+        if(cellIsNotNull && cellIsNotBlack) {
+            inputRefs.current[selectedCell]?.focus();
+        }
+    },[selectedCell, board])
 
-        let newBoard: Cell[] = [...board];
-        newBoard[index].letter = sanitizedValue;
-        console.log(newBoard);
-        setBoard(newBoard);
+    const getRowCol = (index: number): RowCol => ({
+        row: Math.floor(index / 5),
+        col: index % 5
+    });
+
+    const getIndex = (row: number, col: number) : number => row * 5 + col;
+
+    function wrap(value: number, min: number, max: number): number {
+        return ((value - min) % (max - min) + (max - min)) % (max - min) + min;
+    }
+
+
+    const handleClick = (index: number) => {
+        if(index === selectedCell) {
+            const nextHighlightDirection = highlightDirection === "row" ? 'col' : 'row';
+            setHighlightDirection(nextHighlightDirection);
+        } else {
+            setSelectedCell(index);
+        }
     };
 
-    const checkPuzzle = () => {
+    const findNextInRow = (currentPos: RowCol, forward: boolean) : number => {
+        let col = currentPos.col;
+        const row = currentPos.row;
 
+        for(let i = 0; i < 5; i++) {
+            col = forward 
+                ? wrap(col + 1, 0, 5)
+                : wrap(col - 1, 0, 5)
+
+            const index = getIndex(row,col);
+            if(!board[index].isBlack) {
+                return index;
+            }
+        }
+        return 0;
+    }
+
+    const findNextInCol = (currentPos: RowCol, forward: boolean) : number => {
+        let row = currentPos.row;
+        const col = currentPos.col;
+
+        for(let i = 0; i < 5; i++) {
+            row = forward
+                ? wrap(row + 1, 0 ,5)
+                : wrap(row - 1, 0 ,5);
+            const index = getIndex(row, col)
+            if(!board[index].isBlack) {
+                return index
+            }
+        }
+        return 0;
+    }
+
+    const handleKeyDown = (e: React.KeyboardEvent, index: number) => {
+        //Todo breyta í switch statement, cant be bothered
+        const currentPos = getRowCol(index);
+        console.log(e.key, e.key === "ArrowUp")
+        if(
+            e.key === "Escape" || 
+            e.key === "Control" || 
+            e.key === "Shift" || 
+            e.key === "Enter" || 
+            e.key === "Alt" ||
+            e.key === "Meta" ||
+            e.key === "Alt"
+        ) return;
+
+        if(e.key === "ArrowUp")    {
+            const upIndex = findNextInCol(currentPos, false);
+            setSelectedCell(upIndex);
+            return;
+        }
+        if(e.key === "ArrowDown")    {
+            const downIndex = findNextInCol(currentPos, true)
+            setSelectedCell(downIndex);
+            return;
+        }
+        if(e.key === "ArrowLeft")    {
+            const leftIndex = findNextInRow(currentPos, false)
+            setSelectedCell(leftIndex);
+            return;
+        }
+        if(e.key === "ArrowRight") {
+            const rightIndex = findNextInRow(currentPos, true);
+            setSelectedCell(rightIndex);
+            return
+        }
+
+        if(e.key ===  "Tab") {
+            e.preventDefault();
+
+            let nextIndex: number | null = null;
+
+            if(highlightDirection === 'row') {
+                nextIndex = findNextInCol(currentPos, !e.shiftKey);
+            } else {
+                nextIndex = findNextInRow(currentPos, !e.shiftKey);
+            }
+
+            setSelectedCell(nextIndex);
+            inputRefs.current[nextIndex]?.focus();
+            return;
+        }
+        else if(e.key === " ") {
+            e.preventDefault();
+
+            const nextHighlightDirection = highlightDirection === 'row' ? 'col' : 'row';
+            setHighlightDirection(nextHighlightDirection);
+            return
+        }
+        else if(e.key === "Backspace") {
+            const newBoard = [...board];
+            newBoard[index].letter = "";
+            setBoard(newBoard);
+            const currentPos = getRowCol(index);
+            const nextTile = highlightDirection==='row' 
+                ? findNextInRow(currentPos, false)
+                : findNextInCol(currentPos, false);
+            console.log("Next pos is ", nextTile);
+            setSelectedCell(nextTile);
+        }
+         else {
+            const newBoard = [...board];
+            newBoard[index].letter = e.key.toLocaleUpperCase();
+            setBoard(newBoard);
+            const nextTile = highlightDirection==='row' 
+                ? findNextInRow(currentPos, true)
+                : findNextInCol(currentPos, true);
+            console.log("Next pos is ", nextTile);
+            setSelectedCell(nextTile);
+        }        
+    };
+
+    const shouldHighlight = (index: number): boolean => {
+        if(selectedCell === null) return false;
+
+        const selectedPos: RowCol = getRowCol(selectedCell);
+        const currentPos: RowCol = getRowCol(index);
+
+        if(highlightDirection === 'row') {
+            return selectedPos.row === currentPos.row;
+        } else {
+            return selectedPos.col === currentPos.col;
+        } 
+    }
+
+    if (error) {
+        return (<h1> Villa kom upp, reynið aftur síðar </h1>)
     }
 
     if (loading) {
@@ -109,17 +266,21 @@ export default function Crossword() {
             <div className="gameContainer">
                 <div className="board">
                     {
-                        board.map((cell, index) => {
-                            if (cell.letter === " ") return <div className="empty"></div>
+                        board.map((cell: Cell, index: number) => {
+                            if (cell.isBlack) {return <div key={index} className="empty"></div>}
                             return (
-                                <div className="cell">
+                                <div 
+                                    className={`cell`}
+                                    key={index}>
                                     <div className="number">{cell.hintNumber}</div>
                                     <input
-                                        key={index}
+                                        className={`unselectable ${shouldHighlight(index) ? "highlight" : ""}`}
+                                        ref={el => inputRefs.current[index] = el}
+                                        type="text"
+                                        maxLength={1}
                                         value={cell.letter}
-                                        onKeyDown={(e) => "return /[a-z]/i.test(event.key)"}
-                                        onChange={(e) => handleInputChange(index, e.target.value[0] || '')}
-                                        maxLength={1}>
+                                        onClick={() => handleClick(index)}
+                                        onKeyDown={(e: React.KeyboardEvent<HTMLInputElement>) => handleKeyDown(e, index)}>
                                     </input>
                                 </div>
 
@@ -150,9 +311,6 @@ export default function Crossword() {
                     </ol>
                 </div>
             </div>
-            <button className="answerButton" onClick={() => { checkPuzzle(); }}>
-                Check
-            </button>
         </section>
     );
 }
