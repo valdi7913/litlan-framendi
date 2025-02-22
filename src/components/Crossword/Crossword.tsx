@@ -234,7 +234,7 @@ export default function Crossword() {
         }
         else {
             const newBoard = [...board];
-            let pressedKey: string = e.key.toLocaleUpperCase()
+            let pressedKey: string = e.key.toLocaleUpperCase();
 
             if(deadWasLastPressed) {
                 setDeadWasLastPressed(false);
@@ -253,14 +253,7 @@ export default function Crossword() {
         }        
     };
 
-    const deadVersion: {
-        A: string,
-        E: string,
-        I: string,
-        O: string,
-        U: string
-        Y: string
-    } = {
+    const deadVersion: Record<string, string> = {
         A:'Á',
         E:'É',
         I:'Í',
