@@ -30,7 +30,7 @@
 }
 
 #root {padding: 0;}
-@media(max-width:400px) {
+@media only screen and (max-width:800px) {
     .gameContainer {
         flex-direction: column;
         width: 100%;
@@ -53,8 +53,8 @@
     aspect-ratio: 1;
     background-color: white;
     display:grid;
-    grid-template-columns: repeat(5, 80px);
-    grid-template-rows: repeat(5, 80px);
+    grid-template-columns: repeat(5, 1fr);
+    grid-template-rows: repeat(5, 1fr);
 }
 
 

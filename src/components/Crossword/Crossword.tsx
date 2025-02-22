@@ -34,6 +34,7 @@ export default function Crossword() {
     const [selectedCell, setSelectedCell] = useState<number | null>(null);
     const [highlightDirection, setHighlightDirection] = useState<'row' | 'col'>('row');
     const inputRefs = useRef<(HTMLInputElement | null)[]>([]);
+    const [deadWasLastPressed, setDeadWasLastPressed] = useState<boolean>(false);
     
     useEffect(() => {
         const fetchData = async () => {
@@ -172,6 +173,11 @@ export default function Crossword() {
             e.key === "Alt"
         ) return;
 
+        if(e.key === "Dead"){
+            setDeadWasLastPressed(true);
+            return;
+        }
+
         if(e.key === "ArrowUp")    {
             const upIndex = findNextInCol(currentPos, false);
             setSelectedCell(upIndex);
@@ -226,17 +232,44 @@ export default function Crossword() {
             console.log("Next pos is ", nextTile);
             setSelectedCell(nextTile);
         }
-         else {
+        else {
             const newBoard = [...board];
-            newBoard[index].letter = e.key.toLocaleUpperCase();
+            let pressedKey: string = e.key.toLocaleUpperCase()
+
+            if(deadWasLastPressed) {
+                setDeadWasLastPressed(false);
+                pressedKey = deadVersion[pressedKey] ?? pressedKey; 
+            }
+
+
+            newBoard[index].letter = pressedKey;
             setBoard(newBoard);
             const nextTile = highlightDirection==='row' 
                 ? findNextInRow(currentPos, true)
                 : findNextInCol(currentPos, true);
             console.log("Next pos is ", nextTile);
             setSelectedCell(nextTile);
+
         }        
     };
+
+    const deadVersion: {
+        A: string,
+        E: string,
+        I: string,
+        O: string,
+        U: string
+        Y: string
+    } = {
+        A:'Á',
+        E:'É',
+        I:'Í',
+        O:'Ó',
+        U:'Ú',
+        Y:'Ý'
+    }
+
+    
 
     const shouldHighlight = (index: number): boolean => {
         if(selectedCell === null) return false;
