@@ -8,7 +8,6 @@ function App() {
     <>
       <Header></Header>
       <Crossword></Crossword>
-      <Keyboard></Keyboard>
     </>
   )
 }

@@ -1,0 +1,15 @@
+.hint-container {
+    display: flex;
+    flex-direction: row;
+    color: black;
+    align-items: start;
+    max-height: 400px;
+}
+
+.left, .right {
+    min-width: 40px;
+    padding: 5px 2px;
+    border: var(--cell-border-color) 2px solid;
+    border-radius: 4px;
+    flex: 1;
+}

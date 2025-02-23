@@ -1,3 +1,5 @@
+import HintContainer from "../HintContainer/HintContainer";
+import { Keyboard } from "../Keyboard/Keyboard";
 import Spinner from "../Spinner/Spinner";
 import "./Crossword.css";
 import { useEffect, useRef, useState } from "react";
@@ -291,6 +293,28 @@ export default function Crossword() {
         }
     };
 
+    type keyPressed = (key: string) => void
+    const handleOnScreenKeyboard: keyPressed = (key: string): void => {
+        const newBoard = [...board];
+        let pressedKey: string = key.toLocaleUpperCase();
+
+        if (deadWasLastPressed) {
+            setDeadWasLastPressed(false);
+            pressedKey = deadVersion[pressedKey] ?? pressedKey;
+        }
+
+        let nonNullSelectedCell = selectedCell ?? 0;
+        const currentPos = getRowCol(nonNullSelectedCell)
+
+        newBoard[nonNullSelectedCell].letter = pressedKey;
+        setBoard(newBoard);
+        const nextTile = highlightDirection === 'row'
+            ? findNextInRow(currentPos, true)
+            : findNextInCol(currentPos, true);
+        console.log("Next pos is ", nextTile);
+        setSelectedCell(nextTile);
+    }
+
     const deadVersion: Record<string, string> = {
         A: 'Á',
         E: 'É',
@@ -299,8 +323,6 @@ export default function Crossword() {
         U: 'Ú',
         Y: 'Ý'
     }
-
-
 
     const shouldHighlight = (index: number): boolean => {
         if (selectedCell === null) return false;
@@ -326,7 +348,7 @@ export default function Crossword() {
     }
 
     return (
-        <section>
+        <section className="gameSection">
             <div className="gameContainer">
                 <div className="board">
                     {
@@ -375,6 +397,9 @@ export default function Crossword() {
                     </ol>
                 </div>
             </div>
+
+            <HintContainer></HintContainer>
+            <Keyboard keyPressed={handleOnScreenKeyboard}></Keyboard>
         </section>
     );
 }

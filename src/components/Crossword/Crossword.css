@@ -1,10 +1,23 @@
 :root {
     --cell-border-color: #b4b4b4;
+    --cell-width: calc(100% / 5);
+    --cell-height: calc(100% / 5);
+}
+
+* {margin: 0; padding: 0; box-sizing: border-box;}
+
+.gameSection {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
 }
 
 .gameContainer {
     display:flex;
     flex-direction: row;
+    align-items: center;
     gap: 16px
 }
 
@@ -53,11 +66,9 @@
     aspect-ratio: 1;
     background-color: white;
     display:grid;
-    grid-template-columns: repeat(5, 1fr);
-    grid-template-rows: repeat(5, 1fr);
+    grid-template-columns: repeat(5, var(--cell-width));
+    grid-template-rows: repeat(5, var(--cell-height));
 }
-
-
 
 input {
     width: 100%;
