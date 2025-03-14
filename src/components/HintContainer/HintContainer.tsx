@@ -1,10 +1,28 @@
 import "./HintContainer.css"
-export default function HintContainer() {
+import {
+    FaArrowLeft,
+    FaArrowRight
+} from "react-icons/fa6";
+
+export default function HintContainer({ hint }: { hint: string }) {
+
+    const handleLeft = () => {
+        console.log("Left button clicked");
+    }
+
+    const handleRight = () => {
+        console.log("Right button clicked");
+    }
+
     return (
         <div className="hint-container">
-            <button className="left">&lt;-</button>
-            <p>Press the keys on the keyboard to type the correct word</p>
-            <button className="right">-&gt;</button>
+            <button onClick={handleLeft} className="left">
+                <FaArrowLeft />
+            </button>
+            <p className="mid">{hint}</p>
+            <button onClick={handleRight} className="right">
+                <FaArrowRight />
+            </button>
         </div>
     )
 }

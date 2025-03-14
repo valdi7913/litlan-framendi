@@ -1,32 +1,20 @@
+import { Cell, Hint, RowCol } from "../../types";
 import HintContainer from "../HintContainer/HintContainer";
 import { Keyboard } from "../Keyboard/Keyboard";
 import Spinner from "../Spinner/Spinner";
 import "./Crossword.css";
 import { useEffect, useRef, useState } from "react";
 
-type Cell = {
-    letter: string;
-    hintNumber: number | null;
-    isBlack: boolean;
-};
-
-type Hint = {
-    number: number
-    text: string,
-}
-
-type RowCol = {
-    row: number,
-    col: number
-}
-
-type HintApiResponse = {
-    horizontal: Hint[],
-    vertical: Hint[]
+export function getHighlightedHintIndex(selectedCellIndex: number, highlightDirection: 'row' | 'col'): number {
+    if (highlightDirection === "row") {
+        return Math.floor(selectedCellIndex / 5);
+    } else {
+        return selectedCellIndex % 5;
+    }
 }
 
 export default function Crossword() {
-    const [loading, setLoading] = useState(true);
+    const [loading, setLoading] = useState<boolean>(true);
     const [error, setError] = useState<string>("");
     const [horizontalHints, setHorizontalHints] = useState<Hint[]>([]);
     const [verticalHints, setVerticalHints] = useState<Hint[]>([]);
@@ -41,54 +29,15 @@ export default function Crossword() {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const hints: HintApiResponse = {
-                    horizontal: [
-                        { number: 1, text: "Bókhaldskerfi frá microsoft" },
-                        { number: 2, text: "Upphrópum sem lýsir ánægju með sælgæti eða góðgæti!" },
-                        { number: 3, text: "Að tengja saman efni með nál og þráð" },
-                        { number: 4, text: "Nafn á kattardýrir eða vinsælu íþróttavörumerki" },
-                        { number: 5, text: "Stefna eða leið" }
-                    ],
-                    vertical: [
-                        { number: 1, text: "Ekki nægilegt" },
-                        { number: 6, text: "Móðir móður eða föðurs" },
-                        { number: 7, text: "Menntaskóli, stytting" },
-                        { number: 2, text: "Dýrið sem heyrist baula á túnum" },
-                        { number: 5, text: "Að reyna að sjá fyrir eða gera ráð fyrir einhverju" },
-                    ]
-                };
-
-                const board: Cell[] = [
-                    { letter: " ", hintNumber: null, isBlack: false },
-                    { letter: " ", hintNumber: null, isBlack: false },
-                    { letter: " ", hintNumber: null, isBlack: false },
-                    { letter: " ", hintNumber: null, isBlack: false },
-                    { letter: " ", hintNumber: null, isBlack: false },
-                    { letter: " ", hintNumber: null, isBlack: false },
-                    { letter: " ", hintNumber: null, isBlack: false },
-                    { letter: " ", hintNumber: null, isBlack: false },
-                    { letter: " ", hintNumber: null, isBlack: false },
-                    { letter: " ", hintNumber: null, isBlack: false },
-                    { letter: " ", hintNumber: null, isBlack: false },
-                    { letter: " ", hintNumber: null, isBlack: false },
-                    { letter: " ", hintNumber: null, isBlack: false },
-                    { letter: " ", hintNumber: null, isBlack: false },
-                    { letter: " ", hintNumber: null, isBlack: false },
-                    { letter: " ", hintNumber: null, isBlack: false },
-                    { letter: " ", hintNumber: null, isBlack: false },
-                    { letter: " ", hintNumber: null, isBlack: false },
-                    { letter: " ", hintNumber: null, isBlack: false },
-                    { letter: " ", hintNumber: null, isBlack: false },
-                    { letter: " ", hintNumber: null, isBlack: false },
-                    { letter: " ", hintNumber: null, isBlack: false },
-                    { letter: " ", hintNumber: null, isBlack: false },
-                    { letter: " ", hintNumber: null, isBlack: false },
-                    { letter: " ", hintNumber: null, isBlack: false }
-                ];
-
-                setHorizontalHints(hints.horizontal);
-                setVerticalHints(hints.vertical);
-                setBoard(board);
+                //read the daily.json file until we have a backend
+                const response = await fetch("./daily.json");
+                const data = await response.json();
+                console.log(data);
+                const horizontalHints = data.hints.filter((hint: Hint) => hint.direction === "Horizontal")
+                const verticalHints = data.hints.filter((hint: Hint) => hint.direction === "Vertical")
+                setHorizontalHints(horizontalHints);
+                setVerticalHints(verticalHints);
+                setBoard(data.cells);
             } catch (error) {
                 setError((error as Error).message);
             } finally {
@@ -101,7 +50,7 @@ export default function Crossword() {
 
     useEffect(() => {
         const cellIsNotNull = selectedCell !== null;
-        const cellIsNotBlack = selectedCell ? !board[selectedCell].isBlack : false;
+        const cellIsNotBlack = selectedCell ? !board[selectedCell].is_blank : false;
         if (cellIsNotNull && cellIsNotBlack) {
             inputRefs.current[selectedCell]?.focus();
         }
@@ -117,7 +66,6 @@ export default function Crossword() {
     function wrap(value: number, min: number, max: number): number {
         return ((value - min) % (max - min) + (max - min)) % (max - min) + min;
     }
-
 
     const handleClick = (index: number) => {
         if (index === selectedCell) {
@@ -138,7 +86,7 @@ export default function Crossword() {
                 : wrap(col - 1, 0, 5)
 
             const index = getIndex(row, col);
-            if (!board[index].isBlack) {
+            if (!board[index].is_blank) {
                 return index;
             }
         }
@@ -154,7 +102,7 @@ export default function Crossword() {
                 ? wrap(row + 1, 0, 5)
                 : wrap(row - 1, 0, 5);
             const index = getIndex(row, col)
-            if (!board[index].isBlack) {
+            if (!board[index].is_blank) {
                 return index
             }
         }
@@ -171,7 +119,7 @@ export default function Crossword() {
             for (let col = 0; col < 5; col++) {
                 const index = getIndex(row, col);
                 console.log("Checking index ", index)
-                if (!board[index].isBlack) {
+                if (!board[index].is_blank) {
                     return index
                 }
             }
@@ -190,7 +138,7 @@ export default function Crossword() {
             for (let row = 0; row < 5; row++) {
                 const index = getIndex(row, col);
                 console.log("Checking index ", index)
-                if (!board[index].isBlack) {
+                if (!board[index].is_blank) {
                     return index
                 }
             }
@@ -263,7 +211,7 @@ export default function Crossword() {
         }
         else if (e.key === "Backspace") {
             const newBoard = [...board];
-            newBoard[index].letter = "";
+            newBoard[index].value = "";
             setBoard(newBoard);
             const currentPos = getRowCol(index);
             const nextTile = highlightDirection === 'row'
@@ -282,7 +230,7 @@ export default function Crossword() {
             }
 
 
-            newBoard[index].letter = pressedKey;
+            newBoard[index].value = pressedKey;
             setBoard(newBoard);
             const nextTile = highlightDirection === 'row'
                 ? findNextInRow(currentPos, true)
@@ -306,7 +254,7 @@ export default function Crossword() {
         let nonNullSelectedCell = selectedCell ?? 0;
         const currentPos = getRowCol(nonNullSelectedCell)
 
-        newBoard[nonNullSelectedCell].letter = pressedKey;
+        newBoard[nonNullSelectedCell].value = pressedKey;
         setBoard(newBoard);
         const nextTile = highlightDirection === 'row'
             ? findNextInRow(currentPos, true)
@@ -353,18 +301,18 @@ export default function Crossword() {
                 <div className="board">
                     {
                         board.map((cell: Cell, index: number) => {
-                            if (cell.isBlack) { return <div key={index} className="empty"></div> }
+                            if (cell.is_blank) { return <div key={index} className="empty"></div> }
                             return (
                                 <div
                                     className={`cell`}
                                     key={index}>
-                                    <div className="number">{cell.hintNumber}</div>
+                                    {/* <div className="number">{cell.x_coord + "-" + cell.y_coord}</div> */}
                                     <input
                                         className={`unselectable ${shouldHighlight(index) ? "highlight" : ""}`}
                                         ref={el => inputRefs.current[index] = el}
                                         type="text"
                                         maxLength={1}
-                                        value={cell.letter}
+                                        value={cell.value}
                                         onClick={() => handleClick(index)}
                                         onKeyDown={(e: React.KeyboardEvent<HTMLInputElement>) => handleKeyDown(e, index)}>
                                     </input>
@@ -374,33 +322,14 @@ export default function Crossword() {
                         })
                     }
                 </div>
-                <div className="hintContainer">
-                    <h2>Lárétt</h2>
-                    <ol>
-                        {horizontalHints.map(
-                            (hint: Hint, index: number) => (
-                                <li key={index} className="hint">
-                                    {hint.number}. {hint.text}
-                                </li>
-                            )
-                        )}
-                    </ol>
-
-                    <h2>Lóðrétt</h2>
-                    <ol>
-                        {verticalHints.map((hint: Hint, index: number) => (
-                            <li key={index} className="hint">
-                                {hint.number}. {hint.text}
-                            </li>
-                        )
-                        )}
-                    </ol>
-                </div>
             </div>
 
-            <HintContainer></HintContainer>
+
+            <HintContainer hint={
+                highlightDirection === 'row' ? horizontalHints[getHighlightedHintIndex(selectedCell ?? 0, highlightDirection)].text : verticalHints[getHighlightedHintIndex(selectedCell ?? 0, highlightDirection)].text
+            }></HintContainer>
             <Keyboard keyPressed={handleOnScreenKeyboard}></Keyboard>
-        </section>
+        </section >
     );
 }
 

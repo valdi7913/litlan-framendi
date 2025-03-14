@@ -1,0 +1,230 @@
+{
+    "id": 10,
+    "date": "2025-01-31",
+    "width": 5,
+    "height": 5,
+    "cells": [
+        {
+            "value": "á",
+            "is_blank": false,
+            "x_coord": 0,
+            "y_coord": 0
+        },
+        {
+            "value": "m",
+            "is_blank": false,
+            "x_coord": 1,
+            "y_coord": 0
+        },
+        {
+            "value": "æ",
+            "is_blank": false,
+            "x_coord": 2,
+            "y_coord": 0
+        },
+        {
+            "value": "l",
+            "is_blank": false,
+            "x_coord": 3,
+            "y_coord": 0
+        },
+        {
+            "value": "i",
+            "is_blank": false,
+            "x_coord": 4,
+            "y_coord": 0
+        },
+        {
+            "value": "r",
+            "is_blank": false,
+            "x_coord": 0,
+            "y_coord": 1
+        },
+        {
+            "value": "i",
+            "is_blank": false,
+            "x_coord": 1,
+            "y_coord": 1
+        },
+        {
+            "value": "t",
+            "is_blank": false,
+            "x_coord": 2,
+            "y_coord": 1
+        },
+        {
+            "value": "u",
+            "is_blank": false,
+            "x_coord": 3,
+            "y_coord": 1
+        },
+        {
+            "value": "n",
+            "is_blank": false,
+            "x_coord": 4,
+            "y_coord": 1
+        },
+        {
+            "value": "i",
+            "is_blank": false,
+            "x_coord": 0,
+            "y_coord": 2
+        },
+        {
+            "value": "ð",
+            "is_blank": false,
+            "x_coord": 1,
+            "y_coord": 2
+        },
+        {
+            "value": "i",
+            "is_blank": false,
+            "x_coord": 2,
+            "y_coord": 2
+        },
+        {
+            "value": "n",
+            "is_blank": false,
+            "x_coord": 3,
+            "y_coord": 2
+        },
+        {
+            "value": "n",
+            "is_blank": false,
+            "x_coord": 4,
+            "y_coord": 2
+        },
+        {
+            "value": "t",
+            "is_blank": false,
+            "x_coord": 0,
+            "y_coord": 3
+        },
+        {
+            "value": "u",
+            "is_blank": false,
+            "x_coord": 1,
+            "y_coord": 3
+        },
+        {
+            "value": "n",
+            "is_blank": false,
+            "x_coord": 2,
+            "y_coord": 3
+        },
+        {
+            "value": "g",
+            "is_blank": false,
+            "x_coord": 3,
+            "y_coord": 3
+        },
+        {
+            "value": "a",
+            "is_blank": false,
+            "x_coord": 4,
+            "y_coord": 3
+        },
+        {
+            "value": "a",
+            "is_blank": false,
+            "x_coord": 0,
+            "y_coord": 4
+        },
+        {
+            "value": "n",
+            "is_blank": false,
+            "x_coord": 1,
+            "y_coord": 4
+        },
+        {
+            "value": "g",
+            "is_blank": false,
+            "x_coord": 2,
+            "y_coord": 4
+        },
+        {
+            "value": "a",
+            "is_blank": false,
+            "x_coord": 3,
+            "y_coord": 4
+        },
+        {
+            "value": "n",
+            "is_blank": false,
+            "x_coord": 4,
+            "y_coord": 4
+        }
+    ],
+    "hints": [
+        {
+            "id": 1,
+            "x_coord": 0,
+            "y_coord": 0,
+            "direction": "Horizontal",
+            "text": "ásökun"
+        },
+        {
+            "id": 2,
+            "x_coord": 0,
+            "y_coord": 1,
+            "direction": "Horizontal",
+            "text": "það að rita, ritiðja"
+        },
+        {
+            "id": 3,
+            "x_coord": 0,
+            "y_coord": 2,
+            "direction": "Horizontal",
+            "text": "ástundunarsamur"
+        },
+        {
+            "id": 4,
+            "x_coord": 0,
+            "y_coord": 3,
+            "direction": "Horizontal",
+            "text": "vöðvi í munni"
+        },
+        {
+            "id": 5,
+            "x_coord": 0,
+            "y_coord": 4,
+            "direction": "Horizontal",
+            "text": "þægilegur ilmur, góð lykt (í umhverfinu)"
+        },
+        {
+            "id": 6,
+            "x_coord": 0,
+            "y_coord": 0,
+            "direction": "Vertical",
+            "text": "skrifa (nafn sitt) á skjal eða í bók"
+        },
+        {
+            "id": 7,
+            "x_coord": 1,
+            "y_coord": 0,
+            "direction": "Vertical",
+            "text": "það að miða, t.d. skotvopni"
+        },
+        {
+            "id": 8,
+            "x_coord": 2,
+            "y_coord": 0,
+            "direction": "Vertical",
+            "text": "það þegar e-ð ætist, t.d. af völdum sterkrar sýru"
+        },
+        {
+            "id": 9,
+            "x_coord": 3,
+            "y_coord": 0,
+            "direction": "Vertical",
+            "text": "líffæri sem fyllist af lofti við öndun, annað tveggja"
+        },
+        {
+            "id": 10,
+            "x_coord": 4,
+            "y_coord": 0,
+            "direction": "Vertical",
+            "text": "Ekki fyrir utan"
+        }
+    ]
+}

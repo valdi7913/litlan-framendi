@@ -3,7 +3,11 @@
     flex-direction: row;
     color: black;
     align-items: start;
-    max-height: 400px;
+    width: 400px; 
+}
+
+.mid {
+    flex: 10;
 }
 
 .left, .right {
